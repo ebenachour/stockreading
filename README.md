@@ -7,3 +7,12 @@ You must have docker and docker-compose install
 go to the repo and you have just to run
 docker-compose build
 docker-compose up
+
+
+TODO:
+   * Finalize the sync end point
+   * Create a little front
+   
+   * Make the sync asynchrone maybe
+   * Add the CI (travis-ci / gitlab-ci)
+   * Deploy the solution with zappa or ElasticBeanStalk
