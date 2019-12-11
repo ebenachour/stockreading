@@ -9,25 +9,38 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='StockReading',
+            name="StockReading",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('ref_id', models.TextField(validators=[django.core.validators.MinLengthValidator(13), django.core.validators.MaxLengthValidator(13)])),
-                ('expiration_date', models.DateTimeField()),
-                ('modified', models.DateTimeField(auto_now=True)),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                (
+                    "ref_id",
+                    models.TextField(
+                        validators=[
+                            django.core.validators.MinLengthValidator(13),
+                            django.core.validators.MaxLengthValidator(13),
+                        ]
+                    ),
+                ),
+                ("expiration_date", models.DateTimeField()),
+                ("modified", models.DateTimeField(auto_now=True)),
             ],
         ),
         migrations.CreateModel(
-            name='StockReadingHistory',
+            name="StockReadingHistory",
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False)),
-                ('expiration_date', models.DateTimeField()),
-                ('ref', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app.StockReading')),
+                ("id", models.AutoField(primary_key=True, serialize=False)),
+                ("expiration_date", models.DateTimeField()),
+                (
+                    "ref",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="app.StockReading",
+                    ),
+                ),
             ],
         ),
     ]

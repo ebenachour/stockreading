@@ -7,11 +7,13 @@ verify_ssl = true
 pytest = "*"
 pytest-django = "*"
 mock = "*"
+black = "*"
 
 [packages]
 psycopg2 = "*"
 djangorestframework = "*"
 django = "*"
+black = "*"
 
 [requires]
 python_version = "3.7"

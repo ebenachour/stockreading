@@ -7,24 +7,29 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('app', '0001_initial'),
+        ("app", "0001_initial"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='stockreadinghistory',
-            old_name='ref',
-            new_name='stock_reading_id',
+            model_name="stockreadinghistory",
+            old_name="ref",
+            new_name="stock_reading_id",
         ),
         migrations.AddField(
-            model_name='stockreadinghistory',
-            name='stock_reading_ref',
+            model_name="stockreadinghistory",
+            name="stock_reading_ref",
             field=models.TextField(default=1234567890123),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='stockreadinghistory',
-            name='expiration_date',
-            field=models.DateTimeField(validators=[django.core.validators.MinLengthValidator(13), django.core.validators.MaxLengthValidator(13)]),
+            model_name="stockreadinghistory",
+            name="expiration_date",
+            field=models.DateTimeField(
+                validators=[
+                    django.core.validators.MinLengthValidator(13),
+                    django.core.validators.MaxLengthValidator(13),
+                ]
+            ),
         ),
     ]
