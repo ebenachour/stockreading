@@ -1,0 +1,27 @@
+version: '3'
+services: 
+
+  web:
+      build: .
+      container_name: web
+      volumes: 
+      - ./stockreading:/app
+      depends_on: 
+          - postgres
+      ports: 
+        - 8000:8000
+
+  postgres:
+      image: postgres:11.6
+      restart: unless-stopped
+      ports:
+        - 5432:5432
+      environment:  
+            LC_ALL: C.UTF-8
+            POSTGRES_USER: postgres_user
+            POSTGRES_PASSWORD: postgres_password
+            POSTGRES_DB: stock
+      volumes:
+          - pgdata:/var/lib/postgresql/data/  
+volumes: 
+  pgdata:
