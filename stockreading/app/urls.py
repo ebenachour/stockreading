@@ -11,5 +11,4 @@ router.register(r'stockreading', views.StockReadingViewSet)
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('', include(router.urls)),
-    path('sync', views.synchronize, name='sync'),
 ]

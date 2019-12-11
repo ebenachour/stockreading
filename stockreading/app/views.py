@@ -7,6 +7,7 @@ from django.utils.timezone import make_aware
 from django.core.exceptions import ValidationError
 from rest_framework.response import Response
 from django.views.decorators.http import require_http_methods
+from rest_framework.decorators import action
 
 
 class StockReadingViewSet(viewsets.ModelViewSet):
@@ -52,33 +53,36 @@ class StockReadingViewSet(viewsets.ModelViewSet):
    
 
 
-@require_http_methods("POST")
-def synchronize(request):
-    data = request.json
-    for stockmobile in data['stock_reading']:
-        ref_id = stockmobile['ref_id']
-        expiration_date = stockmobile['expiration_date']
-        modified_at = stockmobile['modified']
+    @action(methods=['post'], detail=False,
+            url_path='synchronize', 
+            url_name='sync')
+    def synchronize(self, request):
+        
+        data = request.data
+        for stockmobile in data['stock_reading']:
+            ref_id = stockmobile['ref_id']
+            expiration_date = stockmobile['expiration_date']
+            modified_at = stockmobile['modified']
 
-        stock_reading = StockReading().get_from_ref_id(ref_id)
-        #  If the reference does not exist, i add
-        if not stock_reading:
-            stock_reading = StockReading(ref_id, expiration_date, modified_at)
-        # if the mobile update is upper than the db update, we take the 
-        if stock_reading.modified_at < modified_at:
-            stock_reading.expiration_date = expiration_date
-        # check if the expiration date exist on the history
-        stock_reading.save()
+            stock_reading = StockReading().get_from_ref_id(ref_id)
+            #  If the reference does not exist, i add
+            if not stock_reading:
+                stock_reading = StockReading(ref_id, expiration_date, modified_at)
+            # if the mobile update is upper than the db update, we take the 
+            if stock_reading.modified_at < modified_at:
+                stock_reading.expiration_date = expiration_date
+            # check if the expiration date exist on the history
+            stock_reading.save()
 
-        history_exist = False
-        for history in stock_reading.stock_history:
-            if history.expiration_date == expiration_date:
-                history_exist = True
-                break
-        if not history_exist:
-            stock_history = StockReadingHistory(stock_reading_id=stockreading, 
-                stock_reading_ref=ref_id,
-                expiration_date=expiration_date
-                ))
-            stock_history.save()
-    return HttpResponse(status=200)
+            history_exist = False
+            for history in stock_reading.stock_history:
+                if history.expiration_date == expiration_date:
+                    history_exist = True
+                    break
+            if not history_exist:
+                stock_history = StockReadingHistory(stock_reading_id=stockreading, 
+                    stock_reading_ref=ref_id,
+                    expiration_date=expiration_date
+                    )
+                stock_history.save()
+        return HttpResponse(status=200)

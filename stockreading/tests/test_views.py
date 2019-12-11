@@ -2,7 +2,7 @@ import pytest
 from rest_framework.test import APIClient
 from rest_framework.viewsets import ModelViewSet
 from app.models import StockReading, StockReadingHistory
-
+import json
 from mock import MagicMock
 @pytest.fixture
 def client():
@@ -39,3 +39,20 @@ def test_view_update(client, monkeypatch, stockreading):
     resp = client.put('/app/stockreading/1/', data={"ref_id":ref_id, "expiration_date":"2019-12-12T00:00"})
     assert resp.status_code == 200
 
+
+@pytest.mark.django_db
+def test_synchronize(client, monkeypatch):
+    data={
+        'stock_reading':[
+            {'ref_id': '1234567891234', 
+            'expiration_date': '2019-12-12T00:00', 
+            'modified_at': "2019-12-01T00:00"},
+            
+            {'ref_id': '1234567890123', 
+            'expiration_date': '2019-12-08T00:00', 
+            'modified_at': "2019-12-01T00:00"}
+            ]
+    }
+    json_data = json.dumps(data)
+    resp = client.post('/app/stockreading/synchronize/', data=data, headers={'content-type': 'json'})
+    assert resp.status_code==200
